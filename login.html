@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+
+    <!-- ===== Top Header / Nav ===== -->
+    <header class="login-header">
+        <a href="home.html" class="btn-back" title="กลับไปยังหน้าหลัก">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+            </svg>
+            <span>กลับหน้าหลัก</span>
+        </a>
+    </header>
+
+    <div class="container">
+
+        <!-- ===== ฝั่งซ้าย: รูปภาพ ===== -->
+        <div class="left-side">
+            <img src="KUWIN.png" alt="Background">
+            <div class="overlay">
+                <h1>ยินดีต้อนรับ</h1>
+                <p>เข้าสู่ระบบเพื่อเริ่มต้นใช้งาน</p>
+            </div>
+        </div>
+
+        <!-- ===== ฝั่งขวา: ฟอร์ม ===== -->
+        <div class="right-side">
+
+            <!-- ปุ่มสลับ Login / Register -->
+            <div class="tabs">
+                <button class="tab active" id="tab-login" onclick="showForm('login')">เข้าสู่ระบบ</button>
+                <button class="tab" id="tab-register" onclick="showForm('register')">สร้างบัญชีใหม่</button>
+            </div>
+
+            <!-- ฟอร์มเข้าสู่ระบบ -->
+            <form class="form active" id="form-login" onsubmit="handleLogin(event)">
+                <h2>เข้าสู่ระบบ</h2>
+
+                <label>Email</label>
+                <input type="email" id="login-email" placeholder="your@email.com" required>
+
+                <label>Password</label>
+                <div class="password-field">
+                    <input type="password" id="login-password" placeholder="******" required>
+                    <button type="button" class="eye-btn" onclick="togglePassword(this)">👁</button>
+                </div>
+
+                <button type="submit" class="btn-submit">เข้าสู่ระบบ</button>
+
+                <p class="switch-text">
+                    ยังไม่มีบัญชี? <a href="#" onclick="showForm('register')">สร้างบัญชีใหม่</a>
+                </p>
+            </form>
+
+            <!-- ฟอร์มสมัครสมาชิก -->
+            <form class="form" id="form-register" onsubmit="handleRegister(event)">
+                <h2>สร้างบัญชีใหม่</h2>
+
+                <label>Full Name</label>
+                <input type="text" id="register-fullname" placeholder="สมชาย นายสมจร" required>
+
+                <label>Email</label>
+                <input type="email" id="register-email" placeholder="your@email.com" required>
+
+                <label>Password</label>
+                <div class="password-field">
+                    <input type="password" id="register-password" placeholder="******" required>
+                    <button type="button" class="eye-btn" onclick="togglePassword(this)">👁</button>
+                </div>
+
+                <label>Confirm Password</label>
+                <div class="password-field">
+                    <input type="password" id="register-confirm" placeholder="******" required>
+                    <button type="button" class="eye-btn" onclick="togglePassword(this)">👁</button>
+                </div>
+
+                <button type="submit" class="btn-submit">สมัครสมาชิก</button>
+
+                <p class="switch-text">
+                    มีบัญชีอยู่แล้ว? <a href="#" onclick="showForm('login')">เข้าสู่ระบบ</a>
+                </p>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- 📦 โหลด Supabase JS SDK จาก CDN (ต้องใช้ UMD bundle สำหรับเบราว์เซอร์) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+    <!-- 🔑 ไฟล์ config ที่เก็บ URL + Key (ต้องโหลดก่อน script.js) -->
+    <script src="supabase-config.js"></script>
+
+    <!-- 📝 ไฟล์ logic หลัก (โหลดหลังสุด เพราะต้องใช้ supabase client) -->
+    <script src="login.js"></script>
+</body>
+
+</html>
