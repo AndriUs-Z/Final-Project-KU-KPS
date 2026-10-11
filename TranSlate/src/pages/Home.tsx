@@ -29,12 +29,15 @@ const Home = () => {
             return
         }
 
+        // คำนวณ direction ตอนนี้เลย (ป้องกัน stale closure ใน setTimeout)
+        const direction = isSwap ? "en-th" : "th-en"
+
         // เคลียร์ timer เก่า
         if (debounceRef.current) clearTimeout(debounceRef.current)
 
         // ตั้ง timer ใหม่ — รอ 600ms หลังหยุดพิมพ์
         debounceRef.current = setTimeout(() => {
-            handleTranslate(text)
+            handleTranslate(text, direction)
         }, 600)
 
         return () => {
@@ -45,13 +48,11 @@ const Home = () => {
     // ============================================================
     // เรียก API แปลภาษา
     // ============================================================
-    const handleTranslate = async (text: string) => {
+    const handleTranslate = async (text: string, direction: "th-en" | "en-th") => {
         // Cancel request เก่าที่ยังค้างอยู่
         if (abortRef.current) abortRef.current.abort()
         const controller = new AbortController()
         abortRef.current = controller
-
-        const direction = isSwap ? "en-th" : "th-en"
 
         try {
             const result = await translateText(text, direction, controller.signal)
