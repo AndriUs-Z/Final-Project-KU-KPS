@@ -52,8 +52,8 @@ export type WordStatus = "pending" | "approved" | "rejected";
 
 export interface PendingWord {
   pending_id: number;
-  english_word: string;
-  thai_translation: string;
+  word: string;
+  translation: string;
   context: string | null;
   submitted_by: number; // FK -> User.user_id
   status: WordStatus;
@@ -197,16 +197,16 @@ export interface OcrExtractResponse {
 
 // --- Process 9: เพิ่มคำศัพท์ ---
 export interface AddWordRequest {
-  english_word: string;
-  thai_translation: string;
+  word: string;
+  translation: string;
   context?: string;
 }
 
 // --- Process 10: ดูสถานะคำศัพท์ที่ตนเองส่งไป ---
 export interface WordStatusItem {
   pending_id: number;
-  english_word: string;
-  thai_translation: string;
+  word: string;
+  translation: string;
   status: WordStatus;
   rejected_reason: string | null;
   submitted_at: Date;

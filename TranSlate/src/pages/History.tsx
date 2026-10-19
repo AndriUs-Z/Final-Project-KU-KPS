@@ -8,8 +8,8 @@ import { supabase } from "../lib/supabase"
 interface TranslationHistory {
     id: number
     user_id: string
-    input_text: string
-    output_text: string
+    word: string
+    translate: string
     direction: "th-en" | "en-th"
     translated_at: string
 }
@@ -107,10 +107,10 @@ const History = () => {
                                     {/* ข้อมูลการแปล */}
                                     <div className="flex-1 min-w-0">
                                         <p className="font-medium truncate">
-                                            {item.input_text}
+                                            {item.word}
                                         </p>
                                         <p className="text-sm text-app-green mt-0.5 truncate">
-                                            {item.output_text}
+                                            {item.translate}
                                         </p>
                                     </div>
                                     {/* วันที่และภาษา */}

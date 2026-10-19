@@ -1,20 +1,27 @@
-const API_URL = import.meta.env.VITE_API_URL
+const API_TH_EN_URL = (import.meta.env.VITE_API_TH_EN_URL || import.meta.env.VITE_API_URL || '').trim()
+const API_EN_TH_URL = (import.meta.env.VITE_API_EN_TH_URL || import.meta.env.VITE_API_URL || '').trim()
 
-if (!API_URL) {
-    console.warn('Missing VITE_API_URL in .env — translation API will use mock data for now.')
+function getEndpointUrl(baseUrl: string): string {
+    const cleaned = baseUrl.replace(/\/+$/, '')
+    // ถ้าลงท้ายด้วย path เช่น /translate หรือ /predict อยู่แล้ว ให้ใช้ตามนั้น
+    if (/\/translate$|\/predict$/i.test(cleaned)) {
+        return cleaned
+    }
+    return `${cleaned}/translate`
 }
 
 /**
- * เรียก API แปลภาษา (โมเดลที่เทรนเอง บน Render)
+ * เรียก API แปลภาษา (แยกตามทิศทางการแปล th-en หรือ en-th)
  */
 export async function translateText(
     text: string,
     direction: 'th-en' | 'en-th',
     signal?: AbortSignal
 ): Promise<string> {
-    
-    // 💡 ถ้ายั้งไม่ได้ตั้งค่า API_URL ให้ใช้ระบบจำลอง (Mock) ไปก่อน เพื่อให้เห็นภาพการทำงาน
-    if (!API_URL) {
+    const targetBaseUrl = direction === 'th-en' ? API_TH_EN_URL : API_EN_TH_URL
+
+    // 💡 ถ้ายังไม่ได้ตั้งค่า API URL ให้ใช้ระบบจำลอง (Mock) ไปก่อน
+    if (!targetBaseUrl) {
         // จำลองเวลาโหลด API 0.5 วินาที
         await new Promise(resolve => setTimeout(resolve, 500))
         return direction === 'th-en' 
@@ -23,7 +30,8 @@ export async function translateText(
     }
 
     try {
-        const response = await fetch(`${API_URL}/translate`, {
+        const endpoint = getEndpointUrl(targetBaseUrl)
+        const response = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text, direction }),
