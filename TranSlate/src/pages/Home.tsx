@@ -1,3 +1,4 @@
+// หน้าหลักสำหรับแปลภาษา — ประกอบด้วยช่อง input/output, upload รูป/ไฟล์, และฟอร์มส่งคำศัพท์
 import { useState, useEffect } from "react"
 import { ArrowRightLeft, Copy, Check, ImagePlus, FilePlus, Download, Loader2, Lightbulb } from "lucide-react"
 import Navbar from "../components/Navbar"

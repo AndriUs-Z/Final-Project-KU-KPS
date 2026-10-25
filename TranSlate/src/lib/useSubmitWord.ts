@@ -1,3 +1,4 @@
+// Custom Hook จัดการการส่งคำศัพท์ไปรออนุมัติ — insert ลงตาราง pending_words ใน Supabase
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { supabase } from './supabase'

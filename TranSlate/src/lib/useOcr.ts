@@ -1,3 +1,4 @@
+// Custom Hook จัดการอัปโหลดรูปภาพ (OCR) และไฟล์ (.txt/.pdf) — ส่งข้อความที่ได้ไปยัง setInputText
 import { useState } from 'react'
 import { extractTextFromImage } from './ocr'
 import { extractTextFromFile } from './fileReader'

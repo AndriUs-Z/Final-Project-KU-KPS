@@ -1,3 +1,4 @@
+// Route Guard ชั้นที่ 2 — ตรวจทั้ง login + role === admin ถ้าไม่ใช่ redirect ไป /home
 import { Navigate, Outlet } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { Loader2Icon } from "lucide-react"

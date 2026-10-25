@@ -1,3 +1,4 @@
+// แสดงประวัติการแปลของผู้ใช้ที่ login — ดึงจากตาราง translation_history ใน Supabase
 import { useState, useEffect } from "react"
 import { Clock, Trash2 } from "lucide-react"
 import Navbar from "../components/Navbar"

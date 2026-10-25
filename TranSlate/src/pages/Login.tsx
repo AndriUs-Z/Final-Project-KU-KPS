@@ -1,3 +1,4 @@
+// หน้า Login/Register — สลับ form ได้ใน component เดียว เชื่อมกับ Supabase Auth
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import kuwinImage from '../assets/KUWIN.png'

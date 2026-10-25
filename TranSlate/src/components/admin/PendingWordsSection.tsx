@@ -1,3 +1,4 @@
+// Section ใน Admin Dashboard — แสดงรายการคำศัพท์ที่รอตรวจสอบ พร้อมปุ่มอนุมัติ/ปฏิเสธ
 import { useState } from "react"
 import {
     Clock, CheckCircle2, XCircle, ChevronDown, ChevronUp,

@@ -1,3 +1,4 @@
+// Section ใน Admin Dashboard — แสดงจำนวนคำที่อนุมัติ/เกณฑ์ขั้นต่ำ + ปุ่มสั่ง retrain model + ประวัติ retrain
 import { useEffect, useState } from "react"
 import {
     ChevronDown, ChevronUp,

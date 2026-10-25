@@ -1,3 +1,4 @@
+// อ่านข้อความจากไฟล์ .txt (FileReader API) และ .pdf (pdfjs-dist)
 import * as pdfjsLib from 'pdfjs-dist'
 
 // ชี้ไปยัง worker ของ pdfjs ที่ bundler จัดการให้

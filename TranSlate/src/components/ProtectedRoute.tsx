@@ -1,3 +1,4 @@
+// Route Guard ชั้นที่ 1 — ตรวจว่า login แล้วหรือยัง ถ้าไม่ redirect ไป login
 import { Navigate, Outlet } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { Loader2Icon } from "lucide-react"

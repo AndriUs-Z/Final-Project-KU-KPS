@@ -1,3 +1,4 @@
+// Custom Hook จัดการ logic แปลภาษาทั้งหมด — auto-translate ด้วย debounce 600ms + AbortController + บันทึกประวัติ
 import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from './supabase'

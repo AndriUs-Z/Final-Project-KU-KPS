@@ -1,5 +1,6 @@
+// กำหนด Routes ทั้งหมด (Login, Home, History, Admin) พร้อม Route Guard 2 ระดับ
 import { Toaster } from 'react-hot-toast'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
@@ -16,6 +17,9 @@ const App = () => {
         }
       }} />
       <Routes>
+        {/* Root path — redirect ไปหน้า Home */}
+        <Route path='/' element={<Navigate to='/home' replace />} />
+
         {/*Auth pages - No Navbar/Footer */}
         <Route path='login' element={<Login />} />
 

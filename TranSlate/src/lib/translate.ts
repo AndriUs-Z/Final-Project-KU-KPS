@@ -1,3 +1,4 @@
+// Pure function translateText() — เรียก Translation API ตามทิศทาง (th-en/en-th) รองรับ mock fallback
 const API_TH_EN_URL = (import.meta.env.VITE_API_TH_EN_URL || import.meta.env.VITE_API_URL || '').trim()
 const API_EN_TH_URL = (import.meta.env.VITE_API_EN_TH_URL || import.meta.env.VITE_API_URL || '').trim()
 

@@ -1,3 +1,4 @@
+// สร้าง React Context เก็บ user/session state — จัดการ login, register, logout ผ่าน Supabase Auth
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { supabase } from '../lib/supabase'
 import type { User, Session } from '@supabase/supabase-js'

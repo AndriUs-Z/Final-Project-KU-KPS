@@ -1,3 +1,4 @@
+// Presentational component ฟอร์มส่งคำศัพท์ — word ล็อคไม่ให้แก้, translation แก้ได้, เพิ่มบริบทได้
 import { Send, X, Loader2, Cog, Sparkles, Lock } from "lucide-react"
 
 interface SubmitWordPanelProps {

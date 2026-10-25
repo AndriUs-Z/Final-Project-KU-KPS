@@ -1,3 +1,4 @@
+// Navigation bar — แสดง tabs (แปลภาษา/ประวัติ) + user avatar dropdown + ลิงก์ไป Admin Panel (เฉพาะ admin)
 import { useState, useRef, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { ChevronUp, ChevronDown, MapPin, LogOut } from 'lucide-react'

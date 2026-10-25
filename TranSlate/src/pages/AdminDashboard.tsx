@@ -1,3 +1,4 @@
+// Dashboard สำหรับ Admin — แสดงสถิติรวม + จัดการคำศัพท์ที่รออนุมัติ + สั่ง retrain model
 import { useEffect, useState } from "react"
 import {
     Users, FileText, TrendingUp, ArrowRightLeft, Activity,

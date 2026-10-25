@@ -1,3 +1,4 @@
+// Entry point ของ React app — ตั้งค่า BrowserRouter + AuthProvider แล้ว render
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
