@@ -1,6 +1,7 @@
 // Custom Hook จัดการ logic แปลภาษาทั้งหมด — auto-translate ด้วย debounce 600ms + AbortController + บันทึกประวัติ
+//ผู้ใช้พิมพ์ → รอ 600ms (debounce) → ยกเลิก request เก่า → เรียก API แปลภาษา → แสดงผล → บันทึกประวัติ
 import { useState, useEffect, useRef } from 'react'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/AuthContext' //ดึงข้อมูลผู้ใช้
 import { supabase } from './supabase'
 import { translateText } from './translate'
 
@@ -26,6 +27,7 @@ export function useTranslate() {
     // เรียก API แปลภาษา
     // ============================================================
     const runTranslate = async (text: string, direction: 'th-en' | 'en-th') => {
+        // ยกเลิก request เก่า เช่น เปลี่ยนคำแปลไปมา
         if (abortRef.current) abortRef.current.abort()
         const controller = new AbortController()
         abortRef.current = controller
@@ -33,10 +35,12 @@ export function useTranslate() {
         setIsTranslating(true)
 
         try {
+            // ส่ง controller.signal ไปให้ translateText เพื่อให้สามารถยกเลิก request ได้
             const result = await translateText(text, direction, controller.signal)
             setOutputText(result)
 
             // บันทึกประวัติลง Supabase (ถ้า login อยู่)
+            // histErr สร้างมาเพื่อดัก error แต่เปลี่ยนตัวแปรเพื่อไม่ให้ชนกัน
             if (user) {
                 const { error: histErr } = await supabase.from('translation_history').insert({
                     user_id: user.id,
@@ -62,6 +66,7 @@ export function useTranslate() {
     // ============================================================
     // Auto-translate: พิมพ์แล้วแปลอัตโนมัติ (debounce 600ms)
     // ============================================================
+    // ตัดช่องว่างหัวท้าย
     useEffect(() => {
         const text = inputText.trim()
 
