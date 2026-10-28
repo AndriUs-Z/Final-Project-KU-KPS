@@ -1,6 +1,6 @@
 // หน้าหลักสำหรับแปลภาษา — ประกอบด้วยช่อง input/output, upload รูป/ไฟล์, และฟอร์มส่งคำศัพท์
 import { useState, useEffect } from "react"
-import { ArrowRightLeft, Copy, Check, ImagePlus, FilePlus, Download, Loader2, Lightbulb } from "lucide-react"
+import { ArrowRightLeft, Copy, Check, ImagePlus, FilePlus, Download, Loader2, Lightbulb, ExternalLink } from "lucide-react"
 import Navbar from "../components/Navbar"
 import SubmitWordPanel from "../components/SubmitWordPanel"
 import { useTranslate } from "../lib/useTranslate"
@@ -295,6 +295,19 @@ const Home = () => {
                         />
                     </div>
                 )}
+
+                {/* ── ลิงก์ส่วนขยายแปลหน้าเว็บ ── */}
+                <div className="mt-8 flex justify-center">
+                    <a
+                        href="https://github.com/AndriUs-Z/translate-extension#readme"
+                        target="_blank"
+                        rel="noopener"
+                        className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 hover:text-app-green underline underline-offset-4 transition-colors"
+                    >
+                        ติดตั้งส่วนขยายแปลหน้าเว็บ
+                        <ExternalLink className="size-4" />
+                    </a>
+                </div>
             </main>
         </>
     )
