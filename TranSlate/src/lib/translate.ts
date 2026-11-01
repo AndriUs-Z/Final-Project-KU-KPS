@@ -42,7 +42,7 @@ export async function translateText(
 
         const data = await response.json()
 
-        // ★ รองรับหลายรูปแบบ response จาก API
+        // รองรับหลายรูปแบบ response จาก API
         const translated = data.translated_text
 
         if (translated !== undefined && translated !== null) {
