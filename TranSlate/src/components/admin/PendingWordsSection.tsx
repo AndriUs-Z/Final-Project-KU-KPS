@@ -2,7 +2,7 @@
 import { useState } from "react"
 import {
     Clock, CheckCircle2, XCircle, ChevronDown, ChevronUp,
-    RefreshCw, Loader2,
+    Loader2,
 } from "lucide-react"
 import toast from "react-hot-toast"
 import { supabase } from "../../lib/supabase"

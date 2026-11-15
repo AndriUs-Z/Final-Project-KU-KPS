@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import {
     ChevronDown, ChevronUp,
-    RefreshCw, Loader2, Sparkles, ArrowRightLeft,
+    Loader2, Sparkles, ArrowRightLeft,
 } from "lucide-react"
 import toast from "react-hot-toast"
 import { supabase } from "../../lib/supabase"
@@ -22,10 +22,6 @@ const fmtDate = (iso: string) =>
 
 const JOB_LABEL: Record<RetrainJob["status"], string> = {
     queued: "รอคิว", running: "กำลังเทรน...", success: "เทรนสำเร็จ", failed: "ล้มเหลว",
-}
-const JOB_TEXT: Record<RetrainJob["status"], string> = {
-    queued: "text-amber-600", running: "text-blue-500",
-    success: "text-green-500", failed: "text-red-500",
 }
 
 const DirectionBadge = ({ direction }: { direction?: "th-en" | "en-th" | null }) => {
@@ -118,7 +114,6 @@ const RetrainSection = () => {
         "en-th": false,
     })
     const [tableFilter, setTableFilter] = useState<"all" | "th-en" | "en-th">("all")
-    const [showHistory, setShowHistory] = useState(false)
 
     useEffect(() => {
         fetchApprovedWords()
