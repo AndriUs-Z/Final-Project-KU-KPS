@@ -10,7 +10,7 @@ const ProtectedRoute = () => {
     if (loading) {
         return (
             <div className="min-h-screen flex-center">
-                <Loader2Icon className="size-8 animate-spin text-app-green" />
+                <Loader2Icon className="size-[32px] animate-spin text-app-green" />
             </div>
         )
     }

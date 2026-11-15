@@ -1,6 +1,6 @@
 // Presentational component ฟอร์มส่งคำศัพท์ — word ล็อคไม่ให้แก้, translation แก้ได้, เพิ่มบริบทได้
-import { Send, X, Loader2, Cog, Sparkles, Lock } from "lucide-react"
-
+import { Send, Loader2, Cog, Lock } from "lucide-react"
+    
 interface SubmitWordPanelProps {
     word: string
     translation: string
@@ -42,18 +42,10 @@ const SubmitWordPanel = ({
                             แก้ไขคำแปลเพื่อพัฒนาโมเดล
                         </h2>
                         <p className="text-zinc-400 text-[12px] mt-[2px]">
-                            คำศัพท์ที่ส่งจะถูกส่งไปยัง Admin Dashboard เพื่อรอการอนุมัติ
+                            ข้อมูลที่ส่งจะช่วยปรับปรุงความแม่นยำของโมเดลแปลภาษาสำหรับศัพท์เฉพาะทางด้านวิทยาการคอมพิวเตอร์
                         </p>
                     </div>
                 </div>
-            </div>
-
-            {/* ── คำอธิบาย ── */}
-            <div className="flex items-start gap-[8px] rounded-[12px] bg-orange-100 border border-orange-100 px-[16px] py-[12px] mb-[20px]">
-                <Sparkles className="size-[16px] text-yellow-500 mt-[2px]" />
-                <p className="text-[12px] text-yellow-800">
-                    ข้อมูลที่ส่งจะช่วยปรับปรุงความแม่นยำของโมเดลแปลภาษาสำหรับศัพท์เฉพาะทางด้านวิทยาการคอมพิวเตอร์
-                </p>
             </div>
 
             <div className="grid grid-cols-2 gap-[16px]">
@@ -71,7 +63,7 @@ const SubmitWordPanel = ({
                             value={word}
                             readOnly
                             tabIndex={-1}
-                            className="w-full rounded-[12px] border border-zinc-200 bg-zinc-100/80 px-[16px] py-[10px] text-[16px] text-zinc-600 cursor-not-allowed pr-[40px]"
+                            className="w-full rounded-[12px] border border-zinc-200 bg-zinc-100/80 px-[16px] py-[10px] text-[16px] text-zinc-600 pr-[40px] cursor-not-allowed"
                         />
                         <Lock className="absolute right-[14px] top-1/2 -translate-y-1/2 size-[16px] text-zinc-400 pointer-events-none" />
                     </div>

@@ -19,14 +19,14 @@ const StatCard = ({
     sub?: string
     color: string
 }) => (
-    <div className="bg-white rounded-2xl p-5 shadow-md border border-zinc-100 flex items-start gap-4 hover:shadow-lg transition-shadow">
-        <div className={`size-12 rounded-xl flex-center shrink-0 ${color}`}>
-            <Icon className="size-6 text-white" />
+    <div className="bg-white rounded-[16px] p-[20px] shadow-md flex items-start gap-[16px] hover:shadow-lg ">
+        <div className={`size-[48px] rounded-[12px] flex-center shrink-0 ${color}`}>
+            <Icon className="size-[24px] text-white" />
         </div>
         <div>
-            <p className="text-sm text-zinc-500 font-medium">{label}</p>
-            <p className="text-2xl font-bold text-zinc-800 mt-0.5">{value}</p>
-            {sub && <p className="text-xs text-zinc-400 mt-0.5">{sub}</p>}
+            <p className="text-[14px] font-medium">{label}</p>
+            <p className="text-[24px] font-bold  mt-[2px]">{value}</p>
+            {sub && <p className="text-[12px] text-zinc-500 mt-[2px]">{sub}</p>}
         </div>
     </div>
 )
@@ -85,27 +85,27 @@ const AdminDashboard = () => {
     return (
         <>
             <Navbar />
-            <main className="min-h-screen pb-16">
+            <main className="min-h-screen pb-[64px]">
 
                 {/* Header */}
-                <div className="bg-app-green text-white py-10 px-4">
+                <div className="bg-app-green text-white py-[40px] px-[16px]">
                     <div className="max-w-7xl mx-auto">
-                        <div className="flex items-center justify-between flex-wrap gap-4">
+                        <div className="flex items-center justify-between flex-wrap gap-[16px]">
                             <div>
-                                <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-                                <p className="text-white/70 mt-1 text-sm">ภาพรวมการใช้งานระบบแปลภาษา</p>
+                                <h1 className="text-[30px] font-bold">Admin Dashboard</h1>
+                                <p className="text-white/70 mt-[4px] text-[14px]">ภาพรวมการใช้งานระบบแปลภาษา</p>
                             </div>
                         </div>
-                        <p className="text-white/50 text-xs mt-3">
+                        <p className="text-white/50 text-[12px] mt-[12px]">
                             อัปเดตล่าสุด: {lastRefresh.toLocaleTimeString("th-TH")}
                         </p>
                     </div>
                 </div>
 
-                <div className="max-w-7xl mx-auto px-4">
+                <div className="max-w-7xl mx-auto px-[16px]">
 
                     {/* Summary Cards */}
-                    <div className="grid grid-cols-3 gap-4 mt-8">
+                    <div className="grid grid-cols-3 gap-[16px] mt-[32px]">
                         <StatCard icon={Users} label="จำนวนผู้ใช้ทั้งหมด" value={loading ? "..." : fmtNum(summary.total_users)} sub="คนที่เคยใช้งาน" color="bg-app-green" />
                         <StatCard icon={FileText} label="การแปลทั้งหมด" value={loading ? "..." : fmtNum(summary.total_translations)} sub="ครั้งที่แปลสำเร็จ" color="bg-emerald-600" />
                         <StatCard icon={TrendingUp} label="ตัวอักษรที่ Input ทั้งหมด" value={loading ? "..." : fmtNum(summary.total_input_chars)} sub="ตัวอักษร (ข้อความต้นฉบับ)" color="bg-teal-600" />

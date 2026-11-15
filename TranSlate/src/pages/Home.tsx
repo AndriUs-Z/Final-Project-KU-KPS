@@ -71,6 +71,13 @@ const Home = () => {
     const rightPlaceholder = isSwap ? "คำแปลภาษาไทย" : "English translation"
     const isLoading = isOcrRunning || isFileReading
 
+    // guest กดอัปโหลด → ไม่เปิดหน้าต่างเลือกไฟล์ + แจ้งให้ login
+    const requireLogin = (e: React.MouseEvent<HTMLInputElement>) => {
+        if (user) return
+        e.preventDefault()
+        toast.error("กรุณาเข้าสู่ระบบก่อนอัปโหลดรูปภาพหรือไฟล์")
+    }
+
     // ── UI ──────────────────────────────────────────────────────
     return (
         <>
@@ -170,6 +177,7 @@ const Home = () => {
                                         <input
                                             type="file"
                                             accept="image/*"
+                                            onClick={requireLogin}
                                             onChange={handleImageUpload}
                                             className="hidden"
                                             disabled={isLoading}
@@ -181,6 +189,7 @@ const Home = () => {
                                         <input
                                             type="file"
                                             accept=".pdf,.txt"
+                                            onClick={requireLogin}
                                             onChange={handleFileUpload}
                                             className="hidden"
                                             disabled={isLoading}
@@ -197,7 +206,7 @@ const Home = () => {
                                 value={isTranslating ? "กำลังแปล..." : outputText}
                                 readOnly
                                 placeholder={rightPlaceholder}
-                                className={`w-full h-[200px] resize-none rounded-[12px] border border-zinc-200 bg-zinc-100 px-[20px] py-[16px] text-[14px] placeholder:text-zinc-400 cursor-default ${isTranslating ? "text-zinc-400 italic" : "text-zinc-800"
+                                className={`w-full h-[200px] resize-none rounded-[12px] border border-zinc-200 bg-zinc-100 px-[20px] py-[16px] text-[18px] placeholder:text-zinc-400 cursor-default ${isTranslating ? "text-zinc-400 italic" : "text-zinc-800"
                                     }`}
                             />
                             <div className="flex items-center justify-end gap-[12px] mt-[12px] px-[4px]">
@@ -243,19 +252,19 @@ const Home = () => {
                                 <button
                                     onClick={() => {
                                         if (!user) {
-                                            toast.error("กรุณาเข้าสู่ระบบก่อนส่งคำศัพท์")
+                                            toast.error("กรุณาเข้าสู่ระบบก่อนส่ง feedback")
                                             return
                                         }
                                         setShowPanel(true)
                                         setShowPrompt(false)
                                     }}
-                                    className="rounded-[8px] bg-app-green px-[20px] py-[8px] text-sm font-semibold text-white shadow-lg hover:opacity-90 active:scale-95 transition-all"
+                                    className="rounded-[8px] bg-app-green px-[20px] py-[8px] text-sm font-semibold text-white shadow-lg hover:opacity-90 active:scale-95"
                                 >
                                     ใช่
                                 </button>
                                 <button
                                     onClick={() => setShowPrompt(false)}
-                                    className="rounded-[8px] border border-zinc-200 bg-white px-[16px] py-[8px] text-sm font-medium text-zinc-600 hover:bg-zinc-50 active:scale-95 transition-all"
+                                    className="rounded-[8px] border border-zinc-200 bg-white px-[16px] py-[8px] text-sm font-medium text-zinc-600 hover:bg-zinc-50 active:scale-95"
                                 >
                                     ไม่ใช่
                                 </button>

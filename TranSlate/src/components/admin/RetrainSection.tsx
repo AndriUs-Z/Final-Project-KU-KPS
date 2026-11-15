@@ -24,8 +24,8 @@ const JOB_LABEL: Record<RetrainJob["status"], string> = {
     queued: "รอคิว", running: "กำลังเทรน...", success: "เทรนสำเร็จ", failed: "ล้มเหลว",
 }
 const JOB_TEXT: Record<RetrainJob["status"], string> = {
-    queued: "text-amber-600", running: "text-blue-600",
-    success: "text-emerald-600", failed: "text-red-500",
+    queued: "text-amber-600", running: "text-blue-500",
+    success: "text-green-500", failed: "text-red-500",
 }
 
 const DirectionBadge = ({ direction }: { direction?: "th-en" | "en-th" | null }) => {
@@ -33,7 +33,7 @@ const DirectionBadge = ({ direction }: { direction?: "th-en" | "en-th" | null })
     const isThEn = direction === "th-en"
     return (
         <span
-            className={`text-xs border rounded-md px-2 py-0.5 whitespace-nowrap ${isThEn
+            className={`text-[12px] border rounded-[6px] px-[8px] py-[2pxs] whitespace-nowrap ${isThEn
                     ? "bg-lime-50 text-lime-700 border-lime-200"
                     : "bg-teal-50 text-teal-700 border-teal-200"
                 }`}
@@ -62,18 +62,18 @@ const ModelCard = ({
     const isReady = count >= minPairs
 
     return (
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-zinc-100 flex items-center justify-between gap-4 hover:shadow-md transition-shadow">
-            <div className="flex items-center gap-4 min-w-0">
-                <div className={`size-12 rounded-xl ${color} flex items-center justify-center shrink-0`}>
-                    <ArrowRightLeft className="size-6 text-white" />
+        <div className="bg-white rounded-[16px] p-[20px] shadow-sm border border-zinc-100 flex items-center justify-between gap-[16px] hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-[16px] min-w-0">
+                <div className={`size-[48px] rounded-[12px] ${color} flex items-center justify-center shrink-0`}>
+                    <ArrowRightLeft className="size-[24px] text-white" />
                 </div>
                 <div className="min-w-0">
-                    <p className="text-sm text-zinc-500 font-medium truncate">{name}</p>
-                    <p className="text-2xl font-bold text-zinc-800 mt-0.5">
-                        <span className={isReady ? "text-emerald-600" : "text-zinc-800"}>{count}</span>
-                        <span className="text-sm font-normal text-zinc-400"> / {minPairs} คำ</span>
+                    <p className="text-[14px] text-zinc-500 font-medium truncate">{name}</p>
+                    <p className="text-[24px] font-bold text-zinc-800 mt-[2px]">
+                        <span className={isReady ? "text-green-600" : "text-zinc-800"}>{count}</span>
+                        <span className="text-[14px] font-normal text-zinc-400"> / {minPairs} คำ</span>
                     </p>
-                    <p className="text-xs text-zinc-400 mt-0.5 truncate">
+                    <p className="text-[12px] text-zinc-400 mt-[2px] truncate">
                         {job ? `สถานะ: ${JOB_LABEL[job.status]}` : "ยังไม่เคยเทรน"}
                     </p>
                 </div>
@@ -82,21 +82,21 @@ const ModelCard = ({
             <button
                 onClick={() => onTrigger(dir)}
                 disabled={isLoading || isBusy}
-                className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0 flex items-center gap-1.5 ${isBusy
+                className={`px-[20px] py-[10px] rounded-[12px] text-[14px] font-semibold transition-all shrink-0 flex items-center gap-[6px] ${isBusy
                         ? "bg-blue-50 text-blue-600 cursor-not-allowed"
                         : isReady
-                            ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow"
+                            ? "bg-green-600 hover:bg-green-700 text-white shadow"
                             : "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
                     }`}
             >
                 {isLoading ? (
                     <>
-                        <Loader2 className="size-4 animate-spin" />
+                        <Loader2 className="size-[16px] animate-spin" />
                         <span>กำลังส่ง...</span>
                     </>
                 ) : isBusy ? (
                     <>
-                        <Loader2 className="size-4 animate-spin" />
+                        <Loader2 className="size-[16px] animate-spin" />
                         <span>กำลังเทรน...</span>
                     </>
                 ) : (
@@ -207,37 +207,37 @@ const RetrainSection = () => {
         : approvedWords.filter(w => w.direction === tableFilter)
 
     return (
-        <div className="mt-8 border border-zinc-200 rounded-2xl overflow-hidden bg-white">
+        <div className="mt-[32px] border border-zinc-200 rounded-[16px] overflow-hidden bg-white">
 
             {/* Header ส่วนเทรนโมเดล */}
             <button
                 onClick={() => setOpen(v => !v)}
-                className="w-full flex items-center justify-between px-5 py-4 bg-white hover:bg-zinc-50 transition-colors"
+                className="w-full flex items-center justify-between px-[20px] py-[16px] bg-white hover:bg-zinc-50 transition-colors"
             >
-                <div className="flex items-center gap-3">
-                    <div className="size-9 rounded-lg bg-emerald-50 flex-center">
-                        <Sparkles className="size-4 text-emerald-600" />
+                <div className="flex items-center gap-[12px]">
+                    <div className="size-[36px] rounded-[8px] bg-green-50 flex-center">
+                        <Sparkles className="size-[16px] text-green-600" />
                     </div>
                     <div className="text-left">
-                        <p className="font-semibold text-zinc-800 text-sm">เทรนโมเดล</p>
-                        <p className="text-xs text-zinc-400 mt-0.5">ฝึกสอนโมเดลใหม่ด้วยคำศัพท์ที่อนุมัติแล้ว</p>
+                        <p className="font-semibold text-zinc-800 text-[14px]">เทรนโมเดล</p>
+                        <p className="text-[12px] text-zinc-400 mt-[2px]">ฝึกสอนโมเดลใหม่ด้วยคำศัพท์ที่อนุมัติแล้ว</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-[12px]">
                     {open
-                        ? <ChevronUp className="size-4 text-zinc-400" />
-                        : <ChevronDown className="size-4 text-zinc-400" />
+                        ? <ChevronUp className="size-[16px] text-zinc-400" />
+                        : <ChevronDown className="size-[16px] text-zinc-400" />
                     }
                 </div>
             </button>
 
             {open && (
-                <div className="border-t border-zinc-100">
+                <div className="border-t border-zinc-200">
 
                     {/* ═══════════════════════════════════════════════════════
                         2 STAT CARDS ข้างกัน (แบบเดียวกับการ์ดด้านบน)
                     ═══════════════════════════════════════════════════════ */}
-                    <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-4 bg-zinc-50/50">
+                    <div className="p-[20px] grid grid-cols-1 gap-[16px] bg-zinc-50/50">
 
                         {/* โมเดล 1: ไทย → อังกฤษ */}
                         <ModelCard
@@ -255,7 +255,7 @@ const RetrainSection = () => {
                         <ModelCard
                             dir="en-th"
                             name="en-th"
-                            color="bg-teal-600"
+                            color="bg-cyan-600"
                             count={enThCount}
                             minPairs={minPairs}
                             job={jobEn}
@@ -268,11 +268,11 @@ const RetrainSection = () => {
                     {/* ═══════════════════════════════════════════════════════
                         ตารางคำศัพท์ที่ Approved แล้ว
                     ═══════════════════════════════════════════════════════ */}
-                    <div className="border-t border-zinc-100">
+                    <div className="border-t border-zinc-200">
 
                         {/* Toolbar ของตาราง */}
-                        <div className="flex items-center justify-between px-5 py-3 bg-white border-b border-zinc-100 flex-wrap gap-2">
-                            <div className="flex items-center gap-1">
+                        <div className="flex items-center justify-between px-[20px] py-[12px] bg-white border-b border-zinc-200 flex-wrap gap-[8px]">
+                            <div className="flex items-center gap-[4px]">
                                 {(["all", "th-en", "en-th"] as const).map(f => {
                                     const labels = {
                                         all: `ทั้งหมด (${approvedWords.length})`,
@@ -283,7 +283,7 @@ const RetrainSection = () => {
                                         <button
                                             key={f}
                                             onClick={() => setTableFilter(f)}
-                                            className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${tableFilter === f
+                                            className={`px-[12px] py-[4px] rounded-[8px] text-[12px] font-medium ${tableFilter === f
                                                     ? "bg-zinc-100 text-zinc-800"
                                                     : "text-zinc-400 hover:text-zinc-600"
                                                 }`}
@@ -293,98 +293,46 @@ const RetrainSection = () => {
                                     )
                                 })}
                             </div>
-
-                            <div className="flex items-center gap-3">
-                                <button
-                                    onClick={() => setShowHistory(v => !v)}
-                                    className="text-xs text-zinc-400 hover:text-zinc-600 transition-colors"
-                                >
-                                    {showHistory ? "ซ่อนประวัติเทรน" : "ดูประวัติเทรน"}
-                                </button>
-                                <button
-                                    onClick={() => { fetchApprovedWords(); fetchRetrainStatus() }}
-                                    className="flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-600 transition-colors"
-                                >
-                                    <RefreshCw className={`size-3 ${wordsLoading ? "animate-spin" : ""}`} />
-                                    รีเฟรช
-                                </button>
-                            </div>
                         </div>
-
-                        {/* History table */}
-                        {showHistory && retrainStatus && retrainStatus.history.length > 0 && (
-                            <div className="border-b border-zinc-100 overflow-x-auto bg-zinc-50/40">
-                                <table className="w-full text-xs">
-                                    <thead>
-                                        <tr className="text-zinc-400 border-b border-zinc-100 bg-zinc-50/60">
-                                            <th className="px-5 py-2 text-left font-medium">โมเดล</th>
-                                            <th className="px-5 py-2 text-left font-medium">สถานะ</th>
-                                            <th className="px-5 py-2 text-left font-medium hidden sm:table-cell">ผู้สั่ง</th>
-                                            <th className="px-5 py-2 text-left font-medium">เวลาที่สั่ง</th>
-                                            <th className="px-5 py-2 text-left font-medium hidden md:table-cell">เวลาที่เสร็จ</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {retrainStatus.history.map(job => (
-                                            <tr key={job.id} className="border-b border-zinc-50 hover:bg-zinc-50 transition-colors">
-                                                <td className="px-5 py-2.5 font-medium text-zinc-700">
-                                                    {job.direction === "th-en" ? "ไทย → อังกฤษ" : "อังกฤษ → ไทย"}
-                                                </td>
-                                                <td className={`px-5 py-2.5 font-semibold ${JOB_TEXT[job.status] ?? "text-zinc-500"}`}>
-                                                    {JOB_LABEL[job.status] ?? job.status}
-                                                </td>
-                                                <td className="px-5 py-2.5 text-zinc-400 hidden sm:table-cell">{job.triggered_by}</td>
-                                                <td className="px-5 py-2.5 text-zinc-400 whitespace-nowrap">
-                                                    {fmtDate(job.created_at)}
-                                                </td>
-                                                <td className="px-5 py-2.5 text-zinc-400 whitespace-nowrap hidden md:table-cell">
-                                                    {job.finished_at ? fmtDate(job.finished_at) : "—"}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )}
 
                         {/* Approved words table */}
                         {wordsLoading ? (
-                            <div className="p-5 space-y-2">
+                            <div className="p-[20px] space-y-[10px]">
                                 {[1, 2, 3, 4].map(i => (
-                                    <div key={i} className="h-10 rounded-lg bg-zinc-100 animate-pulse" />
+                                    <div key={i} className="h-[40px] rounded-[8px] bg-zinc-100 animate-pulse" />
                                 ))}
                             </div>
                         ) : filteredWords.length === 0 ? (
-                            <div className="py-12 text-center text-zinc-400">
-                                <p className="text-sm">ยังไม่มีคำที่อนุมัติแล้วในหมวดนี้</p>
-                                <p className="text-xs mt-1 text-zinc-300">อนุมัติคำศัพท์ได้ในส่วน "คำศัพท์จากผู้ใช้" ด้านบน</p>
+                            <div className="py-[48px] text-center text-zinc-400">
+                                <p className="text-[14px]">ยังไม่มีคำที่อนุมัติแล้วในหมวดนี้</p>
+                                <p className="text-[12px] mt-[4px] text-zinc-300">อนุมัติคำศัพท์ได้ในส่วน "คำศัพท์จากผู้ใช้" ด้านบน</p>
                             </div>
                         ) : (
                             <div className="overflow-x-auto">
-                                <table className="w-full text-sm">
+                                <table className="w-full text-[14px]">
                                     <thead>
-                                        <tr className="text-xs text-zinc-400 border-b border-zinc-100">
-                                            <th className="px-5 py-2.5 text-left font-medium w-8">#</th>
-                                            <th className="px-5 py-2.5 text-left font-medium">คำศัพท์</th>
-                                            <th className="px-5 py-2.5 text-left font-medium">คำแปล</th>
-                                            <th className="px-5 py-2.5 text-left font-medium">ทิศทาง</th>
-                                            <th className="px-5 py-2.5 text-left font-medium hidden md:table-cell">บริบท</th>
-                                            <th className="px-5 py-2.5 text-left font-medium hidden lg:table-cell">วันที่อนุมัติ</th>
+                                        <tr className="text-[12px] text-zinc-400 border-b border-zinc-200">
+                                            <th className="px-[20px] py-[10px] text-left font-medium w-8">#</th>
+                                            <th className="px-[20px] py-[10px] text-left font-medium">คำศัพท์</th>
+                                            <th className="px-[20px] py-[10px] text-left font-medium">คำแปล</th>
+                                            <th className="px-[20px] py-[10px] text-left font-medium">ทิศทาง</th>
+                                            <th className="px-[20px] py-[10px] text-left font-medium hidden md:table-cell">บริบท</th>
+                                            <th className="px-[20px] py-[10px] text-left font-medium hidden lg:table-cell">วันที่อนุมัติ</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {filteredWords.map((word, idx) => (
-                                            <tr key={word.id} className="border-b border-zinc-50 hover:bg-zinc-50 transition-colors">
-                                                <td className="px-5 py-3 text-zinc-300 text-xs">{idx + 1}</td>
-                                                <td className="px-5 py-3 font-medium text-zinc-800">{word.word}</td>
-                                                <td className="px-5 py-3 text-zinc-600">{word.translation}</td>
-                                                <td className="px-5 py-3">
+                                            <tr key={word.id} className="border-b border-zinc-100 hover:bg-zinc-100">
+                                                <td className="px-[20px] py-[14px] text-zinc-300 text-[12px]">{idx + 1}</td>
+                                                <td className="px-[20px] py-[14px] font-medium text-zinc-800">{word.word}</td>
+                                                <td className="px-[20px] py-[14px] text-zinc-600">{word.translation}</td>
+                                                <td className="px-[20px] py-[14px]">
                                                     <DirectionBadge direction={word.direction} />
                                                 </td>
-                                                <td className="px-5 py-3 text-zinc-400 text-xs max-w-[160px] truncate hidden md:table-cell">
+                                                <td className="px-[20px] py-[14px] text-zinc-400 text-[12px] max-w-[160px] truncate hidden md:table-cell">
                                                     {word.context ?? "—"}
                                                 </td>
-                                                <td className="px-5 py-3 text-zinc-400 text-xs whitespace-nowrap hidden lg:table-cell">
+                                                <td className="px-[20px] py-[14px] text-zinc-400 text-[12px] whitespace-nowrap hidden lg:table-cell">
                                                     {fmtDate(word.submitted_at)}
                                                 </td>
                                             </tr>

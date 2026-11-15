@@ -2,6 +2,7 @@
 import { Toaster } from 'react-hot-toast'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login';
+import ResetPassword from './pages/ResetPassword';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 import Home from './pages/Home';
@@ -22,10 +23,13 @@ const App = () => {
 
         {/*Auth pages - No Navbar/Footer */}
         <Route path='login' element={<Login />} />
+        <Route path='reset-password' element={<ResetPassword />} />
+
+        {/* Public page - ใช้แปลภาษาได้โดยไม่ต้อง login (guest ไม่บันทึกประวัติ) */}
+        <Route path='home' element={<Home />} />
 
         {/* Protected pages - ต้อง login ก่อน */}
         <Route element={<ProtectedRoute />}>
-          <Route path='home' element={<Home />} />
           <Route path='history' element={<History />} />
         </Route>
 
