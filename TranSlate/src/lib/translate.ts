@@ -11,9 +11,7 @@ function getEndpointUrl(baseUrl: string): string {
     return `${cleaned}/translate`
 }
 
-/**
- * เรียก API แปลภาษา (แยกตามทิศทางการแปล th-en หรือ en-th)
- */
+/* เรียก API แปลภาษา th-en/en-th */
 export async function translateText(
     text: string,
     direction: 'th-en' | 'en-th',
@@ -42,7 +40,7 @@ export async function translateText(
 
         const data = await response.json()
 
-        // รองรับหลายรูปแบบ response จาก API
+        // รับ response จาก API
         const translated = data.translated_text
 
         if (translated !== undefined && translated !== null) {
