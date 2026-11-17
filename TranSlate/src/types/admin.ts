@@ -11,6 +11,7 @@ export interface PendingWord {
     id: string
     user_id: string
     word: string
+    original_translation?: string | null
     translation: string
     context: string | null
     direction?: "th-en" | "en-th" | null

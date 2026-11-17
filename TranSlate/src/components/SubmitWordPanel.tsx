@@ -13,11 +13,9 @@ interface SubmitWordPanelProps {
     onClose: () => void
 }
 
-/**
- * SubmitWordPanel
- * พาเนลแสดงด้านล่างกล่องแปล ให้ผู้ใช้แก้ไขคำแปลเพื่อส่งไปพัฒนาโมเดล
- * - ส่วนของ Word (ข้อความต้นฉบับ) ถูกล็อคไม่ให้แก้ไข
- * - ส่วนของ Translation (คำแปล) สามารถแก้ไขได้
+/* SubmitWordPanel
+ - ส่วนของ Word (ข้อความต้นฉบับ) แก้ไขไม่ได้
+ - ส่วนของ Translation (คำแปล) สามารถแก้ไขได้
  */
 const SubmitWordPanel = ({
     word,

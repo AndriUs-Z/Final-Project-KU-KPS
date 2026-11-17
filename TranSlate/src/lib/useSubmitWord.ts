@@ -53,6 +53,7 @@ export function useSubmitWord(
             const { error } = await supabase.from('pending_words').insert({
                 user_id: user.id,
                 word: word.trim(),
+                original_translation: outputText.trim(),
                 translation: translation.trim(),
                 context: context.trim() || null,
                 direction,

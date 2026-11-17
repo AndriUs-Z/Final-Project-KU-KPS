@@ -175,6 +175,7 @@ const PendingWordsSection = () => {
                                     <thead>
                                         <tr className="text-[12px] text-zinc-400 border-b border-zinc-100">
                                             <th className="px-[20px] py-[10px] text-left font-medium">คำศัพท์</th>
+                                            <th className="px-[20px] py-[10px] text-left font-medium">คำแปลเดิม</th>
                                             <th className="px-[20px] py-[10px] text-left font-medium">คำแปล</th>
                                             <th className="px-[20px] py-[10px] text-left font-medium">ทิศทาง</th>
                                             <th className="px-[20px] py-[10px] text-left font-medium hidden md:table-cell">บริบท</th>
@@ -187,6 +188,7 @@ const PendingWordsSection = () => {
                                         {words.map(word => (
                                             <tr key={word.id} className="border-b border-zinc-200 hover:bg-zinc-50">
                                                 <td className="px-[20px] py-[12px]">{word.word}</td>
+                                                <td className="px-[20px] py-[12px] text-zinc-500">{word.original_translation ?? "—"}</td>
                                                 <td className="px-[20px] py-[12px]">{word.translation}</td>
                                                 <td className="px-[20px] py-[12px]">
                                                     {word.direction === "th-en" && (
