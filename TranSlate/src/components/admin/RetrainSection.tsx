@@ -13,7 +13,7 @@ const API_ADMIN = (import.meta.env.VITE_API_ADMIN_URL || "").replace(/\/+$/, "")
 const API_TH_EN = API_ADMIN || (import.meta.env.VITE_API_TH_EN_URL || "").replace(/\/+$/, "")
 const API_EN_TH = API_ADMIN || (import.meta.env.VITE_API_EN_TH_URL || "").replace(/\/+$/, "")
 
-const DEFAULT_MIN_PAIRS = 100
+const DEFAULT_MIN_PAIRS = 1
 
 // ── Helpers ────────────────────────────────────────────────
 const fmtDate = (iso: string) =>
