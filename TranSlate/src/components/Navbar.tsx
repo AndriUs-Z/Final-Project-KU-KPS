@@ -68,7 +68,7 @@ const Navbar = () => {
                     </Link>
                 </div>
 
-                {/* guest — ปุ่มเข้าสู่ระบบ ขวาสุด */}
+                {/* guest */}
                 {!user && (
                     <Link
                         to="/login"

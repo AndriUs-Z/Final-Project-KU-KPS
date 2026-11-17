@@ -64,7 +64,7 @@ const SubmitWordPanel = ({
                             readOnly
                             tabIndex={-1}
                             className="w-full rounded-[12px] border border-zinc-200 bg-zinc-100/80 px-[16px] py-[10px] text-[16px] text-zinc-600 pr-[40px] cursor-not-allowed"
-                        />
+                        />  
                         <Lock className="absolute right-[14px] top-1/2 -translate-y-1/2 size-[16px] text-zinc-400 pointer-events-none" />
                     </div>
                 </div>

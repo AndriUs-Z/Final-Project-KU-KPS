@@ -1,44 +1,54 @@
-// กำหนด Routes ทั้งหมด (Login, Home, History, Admin) พร้อม Route Guard 2 ระดับ
-import { Toaster } from 'react-hot-toast'
-import { Navigate, Route, Routes } from 'react-router-dom'
-import Login from './pages/Login';
-import ResetPassword from './pages/ResetPassword';
-import ProtectedRoute from './components/ProtectedRoute';
-import AdminRoute from './components/AdminRoute';
-import Home from './pages/Home';
+// กำหนด Routes ทั้งหมดของแอป (Login, Home, History, Admin) พร้อม Route Guard 2 ระดับ
+// และตั้งค่า Toast Notification ส่วนกลางสำหรับแจ้งเตือนทั้งแอปพลิเคชัน
+
+import { Toaster } from 'react-hot-toast' 
+import { Navigate, Route, Routes } from 'react-router-dom' 
+
+// Pages 
+import Login from './pages/Login'; 
+import ResetPassword from './pages/ResetPassword'; 
+import Home from './pages/Home'; 
 import History from './pages/History';
 import AdminDashboard from './pages/AdminDashboard';
 
+// Route Guards (ตัวตรวจสอบสิทธิ์ก่อนเข้าถึงหน้า)
+import ProtectedRoute from './components/ProtectedRoute'; 
+import AdminRoute from './components/AdminRoute'; 
+
 const App = () => {
   return (
-    < >
-      <Toaster position="top-right" toastOptions={{
-        duration: 3000, style: {
-          background: "#1B3022", color: "#fff", borderRadius: "12px", fontSize: "14px"
-        }
-      }} />
-      <Routes>
-        {/* Root path — redirect ไปหน้า Home */}
-        <Route path='/' element={<Navigate to='/home' replace />} />
+    <>
+      {/* Popup แจ้งเตือนส่วนกลาง — แสดงที่มุมขวาบนของทุกหน้าในแอป */}
+      <Toaster
+        position="top-right" 
+        toastOptions={{
+          duration: 3000, 
+          style: {
+            background: "#1B3022", 
+            color: "#fff",        
+            borderRadius: "12px",  
+            fontSize: "14px"       
+          }
+        }}
+      />
 
-        {/*Auth pages - No Navbar/Footer */}
+      <Routes>
+        <Route path='/' element={<Navigate to='/home' replace />} />
+        
         <Route path='login' element={<Login />} />
+
         <Route path='reset-password' element={<ResetPassword />} />
 
-        {/* Public page - ใช้แปลภาษาได้โดยไม่ต้อง login (guest ไม่บันทึกประวัติ) */}
         <Route path='home' element={<Home />} />
 
-        {/* Protected pages - ต้อง login ก่อน */}
         <Route element={<ProtectedRoute />}>
           <Route path='history' element={<History />} />
         </Route>
 
-        {/* Admin pages - ต้องมี role admin */}
         <Route element={<AdminRoute />}>
           <Route path='admin' element={<AdminDashboard />} />
         </Route>
       </Routes>
-
     </>
   );
 }

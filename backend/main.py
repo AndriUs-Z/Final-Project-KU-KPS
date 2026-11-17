@@ -1,7 +1,3 @@
-"""
-Backend Server สำหรับระบบ Admin Retrain
-รันด้วย: uvicorn main:app --reload --port 8000
-"""
 import os
 from dotenv import load_dotenv
 
