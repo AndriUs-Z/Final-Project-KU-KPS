@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // ----- Register -----
     const register = async (email: string, password: string, fullName: string) => {
-        const { error } = await supabase.auth.signUp({
+        const { data,error } = await supabase.auth.signUp({
             email,
             password,
             options: {
@@ -89,6 +89,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 },
             },
         })
+
+        if (data?.user?.identities?.length === 0) {
+        return { error: 'อีเมลนี้ถูกใช้งานแล้ว กรุณาใช้อีเมลอื่น' }
+    }
         return { error: error?.message ?? null }
     }
 
@@ -123,6 +127,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 // -------------------------------------------------------
 export const useAuth = () => {
     const ctx = useContext(AuthContext)
-    if (!ctx) throw new Error('useAuth must be used within AuthProvider')
+    if (!ctx) throw new Error('useAuth must be used within an AuthProvider')
     return ctx
 }

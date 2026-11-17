@@ -13,7 +13,6 @@ const API_ADMIN = (import.meta.env.VITE_API_ADMIN_URL || "").replace(/\/+$/, "")
 const API_TH_EN = API_ADMIN || (import.meta.env.VITE_API_TH_EN_URL || "").replace(/\/+$/, "")
 const API_EN_TH = API_ADMIN || (import.meta.env.VITE_API_EN_TH_URL || "").replace(/\/+$/, "")
 
-// กำหนดเกณฑ์ขั้นต่ำ (ลดชั่วคราวเพื่อเทส → เปลี่ยนกลับ 100 หลังเทสเสร็จ)
 const DEFAULT_MIN_PAIRS = 100
 
 // ── Helpers ────────────────────────────────────────────────
@@ -210,8 +209,8 @@ const RetrainSection = () => {
                 className="w-full flex items-center justify-between px-[20px] py-[16px] bg-white hover:bg-zinc-50 transition-colors"
             >
                 <div className="flex items-center gap-[12px]">
-                    <div className="size-[36px] rounded-[8px] bg-green-50 flex-center">
-                        <Sparkles className="size-[16px] text-green-600" />
+                    <div className="size-[36px] rounded-[8px] bg-app-green/80 flex-center">
+                        <Sparkles className="size-[16px] text-white" />
                     </div>
                     <div className="text-left">
                         <p className="font-semibold text-zinc-800 text-[14px]">เทรนโมเดล</p>

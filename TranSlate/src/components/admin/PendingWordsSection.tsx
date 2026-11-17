@@ -117,8 +117,8 @@ const PendingWordsSection = () => {
                     className="w-full flex items-center justify-between px-[20px] py-[16px] bg-white hover:bg-zinc-50"
                 >
                     <div className="flex items-center gap-[12px]">
-                        <div className="size-[36px] rounded-[8px] bg-green-50 flex-center">
-                            <Clock className="size-[16px] text-green-500" />
+                        <div className="size-[36px] rounded-[8px] bg-app-green/80 flex-center">
+                            <Clock className="size-[16px] text-white" />
                         </div>
                         <div className="text-left">
                             <p className="font-semibold text-zinc-800 text-[14px]">คำศัพท์จากผู้ใช้</p>

@@ -40,7 +40,7 @@ const Login = () => {
                 // ----- Forgot Password (ส่งลิงก์รีเซ็ตรหัสผ่านทางอีเมล) -----
                 const { error } = await resetPasswordForEmail(email)
                 if (error) {
-                    toast.error(error)
+                    toast.error('เกิดข้อผิดพลาด กรุณารอสักครู่แล้วลองใหม่อีกครั้ง')
                 } else {
                     setResetEmailSent(true)
                     toast.success('ส่งลิงก์รีเซ็ตรหัสผ่านไปยังอีเมลของคุณแล้ว!')
@@ -49,7 +49,7 @@ const Login = () => {
                 // ----- Login -----
                 const { error } = await login(email, password)
                 if (error) {
-                    toast.error(error)
+                    toast.error('อีเมลหรือรหัสผ่านไม่ถูกต้อง')
                 } else {
                     toast.success('เข้าสู่ระบบสำเร็จ!')
                     navigate('/home')
@@ -62,9 +62,17 @@ const Login = () => {
                 }
                 const { error } = await register(email, password, name)
                 if (error) {
-                    toast.error(error)
+                    if (error.toLowerCase().includes('at least 6 characters')) {
+                        toast.error('รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร')
+                    } else if (error.toLowerCase().includes('already registered')) {
+                        toast.error('อีเมลนี้ถูกใช้งานแล้ว กรุณาใช้อีเมลอื่น')
+                    } else if (error.toLowerCase().includes('rate limit')) {
+                        toast.error('ส่งคำขอถี่เกินไป กรุณารอสักครู่แล้วลองใหม่')
+                    } else {
+                        toast.error(error)
+                    }
                 } else {
-                    toast.success('สมัครสมาชิกสำเร็จ! เข้าสู่ระบบได้เลย')
+                    toast.success('โปรดยืนยันอีเมลของคุณก่อนเข้าสู่ระบบ')
                     setMode('login')
                     setPassword("")
                 }
