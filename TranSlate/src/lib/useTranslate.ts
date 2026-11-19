@@ -22,6 +22,7 @@ export function useTranslate() {
 
     const abortRef = useRef<AbortController | null>(null)
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const lastKeyRef = useRef('')
 
     // ============================================================
     // เรียก API แปลภาษา
@@ -38,6 +39,7 @@ export function useTranslate() {
             // ส่ง controller.signal ไปให้ translateText เพื่อให้สามารถยกเลิก request ได้
             const result = await translateText(text, direction, controller.signal)
             setOutputText(result)
+            lastKeyRef.current = `${direction}:${text}`
 
             // บันทึกประวัติลง Supabase (ถ้า login อยู่)
             // histErr สร้างมาเพื่อดัก error แต่เปลี่ยนตัวแปรเพื่อไม่ให้ชนกัน
@@ -95,6 +97,26 @@ export function useTranslate() {
     // ============================================================
     const handleSwap = () => setIsSwap((prev) => !prev)
 
+    // กดปุ่ม "แปล" → แปลทันทีโดยไม่ต้องรอ debounce
+    const translateNow = () => {
+        const text = inputText.trim()
+        if (!text) return
+        const direction = isSwap ? 'en-th' : 'th-en'
+        // ถ้าข้อความนี้แปลเสร็จแล้ว ไม่ต้องแปลซ้ำ (กันบันทึกประวัติซ้ำ)
+        if (lastKeyRef.current === `${direction}:${text}` && outputText) return
+        if (debounceRef.current) clearTimeout(debounceRef.current)
+        runTranslate(text, direction)
+    }
+
+    // ล้างข้อความทั้งหมด
+    const handleClear = () => {
+        if (debounceRef.current) clearTimeout(debounceRef.current)
+        if (abortRef.current) abortRef.current.abort()
+        setInputText('')
+        setOutputText('')
+        setIsTranslating(false)
+    }
+
     const handleCopy = () => {
         if (!outputText) return
         navigator.clipboard.writeText(outputText)
@@ -121,6 +143,8 @@ export function useTranslate() {
         isTranslating,
         isSwap,
         handleSwap,
+        translateNow,
+        handleClear,
         handleCopy,
         handleDownload,
         copied,

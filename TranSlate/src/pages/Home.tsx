@@ -1,6 +1,6 @@
-// หน้าหลักสำหรับแปลภาษา — ประกอบด้วยช่อง input/output, upload รูป/ไฟล์, และฟอร์มส่งคำศัพท์
-import { useState, useEffect } from "react"
-import { ArrowRightLeft, Copy, Check, ImagePlus, FilePlus, Download, Loader2, Lightbulb, ExternalLink } from "lucide-react"
+// หน้าหลักสำหรับแปลภาษา — ประกอบด้วยช่อง input, การ์ดผลแปล, upload รูป/ไฟล์, และฟอร์มเสนอคำแปล
+import { useState, useEffect, useRef } from "react"
+import { ArrowRightLeft, Check, FileText, Loader2, X, ArrowUpRight } from "lucide-react"
 import Navbar from "../components/Navbar"
 import SubmitWordPanel from "../components/SubmitWordPanel"
 import { useTranslate } from "../lib/useTranslate"
@@ -8,6 +8,8 @@ import { useOcr } from "../lib/useOcr"
 import { useSubmitWord } from "../lib/useSubmitWord"
 import { useAuth } from "../context/AuthContext"
 import toast from "react-hot-toast"
+
+const MAX_CHARS = 5000
 
 const Home = () => {
     const { user } = useAuth()
@@ -20,6 +22,8 @@ const Home = () => {
         isTranslating,
         isSwap,
         handleSwap,
+        translateNow,
+        handleClear,
         handleCopy,
         handleDownload,
         copied,
@@ -49,27 +53,28 @@ const Home = () => {
         handleSubmit,
     } = useSubmitWord(inputText, outputText, isSwap)
 
-    // ── State UX 2 ขั้นตอน ─────────────────────────────────────
-    const [showPrompt, setShowPrompt] = useState(false)
-    const [showPanel, setShowPanel] = useState(false) // เปลี่ยนค่าเริ่มต้นเป็น false
+    // ── แสดงฟอร์มเสนอคำแปล ─────────────────────────────────────
+    const [showPanel, setShowPanel] = useState(false)
 
-    // เมื่อมีผลแปลใหม่ → รีเซ็ตให้แสดง Prompt และซ่อน Panel
+    // เมื่อมีผลแปลใหม่ → ซ่อนฟอร์ม
     useEffect(() => {
-        if (outputText) {
-            setShowPrompt(true)
-            setShowPanel(false) // ซ่อน panel เมื่อมีการแปลคำใหม่
-        } else {
-            setShowPrompt(false)
-            setShowPanel(false)
-        }
+        setShowPanel(false)
     }, [outputText])
 
+    // textarea ขยายความสูงตามเนื้อหา
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
+    useEffect(() => {
+        const el = textareaRef.current
+        if (!el) return
+        el.style.height = "auto"
+        el.style.height = `${Math.min(el.scrollHeight, 320)}px`
+    }, [inputText])
+
     // ── computed values ─────────────────────────────────────────
-    const leftLabel = isSwap ? "English" : "ไทย"
-    const rightLabel = isSwap ? "ไทย" : "English"
-    const leftPlaceholder = isSwap ? "Type English word..." : "พิมพ์คำศัพท์ภาษาไทย..."
-    const rightPlaceholder = isSwap ? "คำแปลภาษาไทย" : "English translation"
+    const targetLabel = isSwap ? "ไทย" : "English"
+    const placeholder = isSwap ? "Type English text..." : "พิมพ์ข้อความภาษาไทย..."
     const isLoading = isOcrRunning || isFileReading
+    const hasResult = !!outputText || isTranslating
 
     // guest กดอัปโหลด → ไม่เปิดหน้าต่างเลือกไฟล์ + แจ้งให้ login
     const requireLogin = (e: React.MouseEvent<HTMLInputElement>) => {
@@ -78,232 +83,263 @@ const Home = () => {
         toast.error("กรุณาเข้าสู่ระบบก่อนอัปโหลดรูปภาพหรือไฟล์")
     }
 
+    const handleClearAll = () => {
+        handleClear()
+        if (imagePreview) removeImage()
+        if (uploadedFile) removeFile()
+    }
+
+    const openSuggest = () => {
+        if (!user) {
+            toast.error("กรุณาเข้าสู่ระบบก่อนเสนอคำแปล")
+            return
+        }
+        setShowPanel(true)
+    }
+
+    // ปุ่มเลือกภาษาแบบ pill
+    const langBtn = (active: boolean) =>
+        `rounded-full px-[18px] py-[8px] text-[14px] font-semibold transition-colors ${active ? "bg-app-green text-white" : "text-app-green hover:bg-black/5"
+        }`
+
+    const toolBtn =
+        "flex items-center gap-[4px] rounded-[8px] px-[8px] py-[6px] text-[13px] text-zinc-600 hover:bg-zinc-100 hover:text-app-green cursor-pointer"
+
     // ── UI ──────────────────────────────────────────────────────
     return (
         <>
             <Navbar />
-            <main className="min-h-screen pb-12">
-                <h1 className="mt-[24px] text-center text-[96px] font-bold text-app-green"> แปลภาษา</h1>
-                <h2 className="mt-[24px] text-center font-semibold text-black/50">
-                    แปลคำศัพท์เฉพาะทาง วิทยาการคอมพิวเตอร์ ได้เลย!!
-                </h2>
+            <main className="min-h-screen px-[16px] pb-[48px]">
+                <h1 className="mt-[24px] text-center text-[56px] md:text-[72px] font-bold leading-tight text-app-green">
+                    แปลภาษา
+                </h1>
+                <p className="mt-[8px] text-center text-[15px] font-semibold text-app-green/80">
+                    แปลทั้งประโยค และเข้าใจศัพท์วิทยาการคอมพิวเตอร์ทีละคำ
+                </p>
 
-                <div className="mx-auto mt-[48px] w-full max-w-[1024px] rounded-[24px] bg-white p-[24px] shadow-lg">
+                <div className="mx-auto mt-[32px] w-full max-w-[1024px] space-y-[16px]">
 
-                    {/* ── ส่วนสลับภาษา ── */}
-                    <div className="flex items-center justify-center gap-[32px] mb-[24px]">
-                        <p className="w-[128px] text-right text-[20px] font-medium">{leftLabel}</p>
-                        <ArrowRightLeft
-                            onClick={handleSwap}
-                            className={`size-[32px] text-app-green cursor-pointer transition-transform duration-300  ${isSwap ? "rotate-180" : ""}`}
-                        />
-                        <p className="w-[128px] text-left text-[20px] font-medium">{rightLabel}</p>
-                    </div>
+                    {/* ── การ์ดช่องพิมพ์ข้อความ ── */}
+                    <section className="rounded-[24px] bg-white px-[20px] pt-[16px] pb-[14px] shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
 
-                    {/* ── ส่วนช่องพิมพ์ข้อความ ── */}
-                    <div className="grid grid-cols-2 gap-[16px]">
-
-                        {/* ── ฝั่งซ้าย (input) ── */}
-                        <div className="flex flex-col">
-                            <textarea
-                                value={inputText}
-                                onChange={(e) => setInputText(e.target.value)}
-                                placeholder={leftPlaceholder}
-                                className="w-full h-[200px] resize-none rounded-[12px] border border-zinc-200 bg-zinc-50 px-[20px] py-[16px] text-[18px] placeholder:text-zinc-500 focus:border-app-green focus:ring-1 focus:ring-app-green focus:outline-none"
-                            />
-
-                            {/* Loading OCR */}
-                            {isOcrRunning && (
-                                <p className="mt-2 text-[14px] text-zinc-400 flex items-center gap-1">
-                                    <Loader2 className="size-3 animate-spin" />
-                                    กำลังอ่านข้อความจากรูปภาพ...
-                                </p>
-                            )}
-
-                            {/* Loading อ่านไฟล์ */}
-                            {isFileReading && (
-                                <p className="mt-2 text-[14px] text-zinc-400 flex items-center gap-1">
-                                    <Loader2 className="size-3 animate-spin" />
-                                    กำลังอ่านข้อความจากไฟล์...
-                                </p>
-                            )}
-
-                            {/* Error message */}
-                            {error && (
-                                <p className="mt-2 text-[14px] text-red-500">{error}</p>
-                            )}
-
-                            {/* Preview รูปภาพ / ชื่อไฟล์ */}
-                            {(imagePreview || uploadedFile) && (
-                                <div className="flex items-center gap-[12px] mt-[12px]">
-                                    {imagePreview && (
-                                        <div className="relative w-fit">
-                                            <img
-                                                src={imagePreview}
-                                                alt="uploaded"
-                                                className="h-[96px] rounded-[8px] border border-zinc-200 object-cover"
-                                            />
-                                            <button
-                                                onClick={removeImage}
-                                                className="absolute -top-[8px] -right-[8px] flex size-[18px] items-center justify-center rounded-full bg-red-500 text-[10px] text-white hover:bg-red-600"
-                                            >
-                                                X
-                                            </button>
-                                        </div>
-                                    )}
-                                    {uploadedFile && (
-                                        <div className="relative flex items-center gap-[10px] rounded-[8px] border border-zinc-200 bg-zinc-50 px-3 py-2">
-                                            <FilePlus className="size-[16px] text-zinc-400" />
-                                            <span className="text-[14px] text-zinc-600 max-w-[150px] truncate">
-                                                {uploadedFile.name}
-                                            </span>
-                                            <button
-                                                onClick={removeFile}
-                                                className="absolute -top-[8px] -right-[8px] flex size-[18px] items-center justify-center rounded-full bg-red-500 text-[10px] text-white hover:bg-red-600"
-                                            >
-                                                X
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* ปุ่มอัปโหลด + จำนวนตัวอักษร */}
-                            <div className="flex items-center justify-between mt-[10px] px-[4px]">
-                                <div className="flex items-center gap-[12px]">
-                                    {/* ปุ่มรูปภาพ */}
-                                    <label className={`flex items-center gap-[12px] text-zinc-400 hover:text-app-green cursor-pointer ${isLoading ? "pointer-events-none opacity-50" : ""}`}>
-                                        <ImagePlus className="size-[18px]" />
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            onClick={requireLogin}
-                                            onChange={handleImageUpload}
-                                            className="hidden"
-                                            disabled={isLoading}
-                                        />
-                                    </label>
-                                    {/* ปุ่มไฟล์ */}
-                                    <label className={`flex items-center gap-[12px] text-zinc-400 hover:text-app-green cursor-pointer ${isLoading ? "pointer-events-none opacity-50" : ""}`}>
-                                        <FilePlus className="size-[18px]" />
-                                        <input
-                                            type="file"
-                                            accept=".pdf,.txt"
-                                            onClick={requireLogin}
-                                            onChange={handleFileUpload}
-                                            className="hidden"
-                                            disabled={isLoading}
-                                        />
-                                    </label>
-                                </div>
-                                <span className="text-[14px] text-zinc-400">{inputText.length} ตัวอักษร</span>
-                            </div>
+                        {/* ส่วนสลับภาษา */}
+                        <div className="inline-flex items-center gap-[4px] rounded-full bg-[#f1ede4] p-[3px]">
+                            <button onClick={() => isSwap && handleSwap()} className={langBtn(!isSwap)}>
+                                ไทย
+                            </button>
+                            <button
+                                onClick={handleSwap}
+                                aria-label="สลับภาษา"
+                                className="flex size-[32px] items-center justify-center rounded-full text-app-green hover:bg-black/5"
+                            >
+                                <ArrowRightLeft className={`size-[16px] transition-transform duration-300 ${isSwap ? "rotate-180" : ""}`} />
+                            </button>
+                            <button onClick={() => !isSwap && handleSwap()} className={langBtn(isSwap)}>
+                                English
+                            </button>
                         </div>
 
-                        {/* ── ฝั่งขวา (output) ── */}
-                        <div className="flex flex-col">
-                            <textarea
-                                value={isTranslating ? "กำลังแปล..." : outputText}
-                                readOnly
-                                placeholder={rightPlaceholder}
-                                className={`w-full h-[200px] resize-none rounded-[12px] border border-zinc-200 bg-zinc-100 px-[20px] py-[16px] text-[18px] placeholder:text-zinc-400 cursor-default ${isTranslating ? "text-zinc-400 italic" : "text-zinc-800"
-                                    }`}
-                            />
-                            <div className="flex items-center justify-end gap-[12px] mt-[12px] px-[4px]">
+                        {/* ช่องพิมพ์ */}
+                        <textarea
+                            ref={textareaRef}
+                            value={inputText}
+                            maxLength={MAX_CHARS}
+                            onChange={(e) => setInputText(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) translateNow()
+                            }}
+                            placeholder={placeholder}
+                            rows={1}
+                            className="mt-[12px] block min-h-[48px] w-full resize-none bg-transparent px-[4px] py-[8px] text-[18px] text-zinc-900 placeholder:text-zinc-400 focus:outline-none"
+                        />
+
+                        {/* สถานะ / error */}
+                        {isOcrRunning && (
+                            <p className="flex items-center gap-1 px-[4px] text-[13px] text-zinc-400">
+                                <Loader2 className="size-3 animate-spin" />
+                                กำลังอ่านข้อความจากรูปภาพ...
+                            </p>
+                        )}
+                        {isFileReading && (
+                            <p className="flex items-center gap-1 px-[4px] text-[13px] text-zinc-400">
+                                <Loader2 className="size-3 animate-spin" />
+                                กำลังอ่านข้อความจากไฟล์...
+                            </p>
+                        )}
+                        {error && <p className="px-[4px] text-[13px] text-red-500">{error}</p>}
+
+                        {/* Preview รูปภาพ / ชื่อไฟล์ */}
+                        {(imagePreview || uploadedFile) && (
+                            <div className="mt-[8px] flex items-center gap-[12px] px-[4px]">
+                                {imagePreview && (
+                                    <div className="relative w-fit">
+                                        <img
+                                            src={imagePreview}
+                                            alt="uploaded"
+                                            className="h-[72px] rounded-[8px] border border-zinc-200 object-cover"
+                                        />
+                                        <button
+                                            onClick={removeImage}
+                                            className="absolute -top-[8px] -right-[8px] flex size-[18px] items-center justify-center rounded-full bg-app-green text-white"
+                                        >
+                                            <X className="size-[12px]" />
+                                        </button>
+                                    </div>
+                                )}
+                                {uploadedFile && (
+                                    <div className="relative flex items-center gap-[8px] rounded-[8px] border border-zinc-200 bg-zinc-50 px-3 py-2">
+                                        <FileText className="size-[16px] text-zinc-400" />
+                                        <span className="max-w-[160px] truncate text-[13px] text-zinc-600">
+                                            {uploadedFile.name}
+                                        </span>
+                                        <button
+                                            onClick={removeFile}
+                                            className="absolute -top-[8px] -right-[8px] flex size-[18px] items-center justify-center rounded-full bg-app-green text-white"
+                                        >
+                                            <X className="size-[12px]" />
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* แถบเครื่องมือ */}
+                        <div className="mt-[8px] flex items-center justify-between border-t border-[#ece6da] pt-[10px]">
+                            <div className="flex items-center gap-[4px]">
+                                <label className={`${toolBtn} ${isLoading ? "pointer-events-none opacity-50" : ""}`}>
+                                    รูปภาพ
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onClick={requireLogin}
+                                        onChange={handleImageUpload}
+                                        className="hidden"
+                                        disabled={isLoading}
+                                    />
+                                </label>
+                                <label className={`${toolBtn} ${isLoading ? "pointer-events-none opacity-50" : ""}`}>
+                                    ไฟล์
+                                    <input
+                                        type="file"
+                                        accept=".pdf,.txt"
+                                        onClick={requireLogin}
+                                        onChange={handleFileUpload}
+                                        className="hidden"
+                                        disabled={isLoading}
+                                    />
+                                </label>
                                 <button
-                                    onClick={handleDownload}
-                                    disabled={!outputText || isTranslating}
-                                    className="flex items-center gap-[4px] text-[14px] text-zinc-400 hover:text-app-green cursor-pointer"
+                                    onClick={handleClearAll}
+                                    disabled={!inputText && !imagePreview && !uploadedFile}
+                                    className={`${toolBtn} disabled:pointer-events-none disabled:opacity-40`}
                                 >
-                                    <Download className="size-[16px]" />
-                                    ดาวน์โหลด .txt
+                                    ล้าง
+                                    <X className="size-[14px]" />
                                 </button>
+                            </div>
+
+                            <div className="flex items-center gap-[16px]">
+                                <span className="text-[13px] text-zinc-500">
+                                    {inputText.length.toLocaleString()} / {MAX_CHARS.toLocaleString()}
+                                </span>
+                                <button
+                                    onClick={translateNow}
+                                    disabled={!inputText.trim() || isTranslating}
+                                    className="flex min-w-[72px] items-center justify-center rounded-full bg-app-green px-[24px] py-[10px] text-[15px] font-semibold text-white hover:opacity-90 active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
+                                >
+                                    {isTranslating ? <Loader2 className="size-[18px] animate-spin" /> : "แปล"}
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* ── การ์ดผลแปล ── */}
+                    {hasResult && (
+                        <section className="animate-slide-down rounded-[24px] bg-app-green px-[24px] py-[24px] text-white">
+                            <p className="text-[12px] font-semibold tracking-wide text-[#c9e4b8]">
+                                คำแปลทั้งประโยค · {targetLabel.toUpperCase()}
+                            </p>
+                            {isTranslating ? (
+                                <p className="mt-[10px] flex items-center gap-[10px] text-[20px] text-white/60">
+                                    <Loader2 className="size-[20px] animate-spin" />
+                                    กำลังแปล...
+                                </p>
+                            ) : (
+                                <p
+                                    className={`mt-[8px] whitespace-pre-wrap break-words font-semibold leading-snug ${outputText.length > 120 ? "text-[20px]" : "text-[28px]"
+                                        }`}
+                                >
+                                    {outputText}
+                                </p>
+                            )}
+                            <div className="mt-[18px] flex items-center gap-[8px]">
                                 <button
                                     onClick={handleCopy}
                                     disabled={!outputText || isTranslating}
-                                    className="flex items-center gap-[4px] text-[14px] text-zinc-400 hover:text-app-green cursor-pointer "
+                                    className="flex items-center gap-[6px] rounded-[8px] bg-white px-[16px] py-[8px] text-[13px] font-semibold text-app-green hover:bg-white/90 disabled:opacity-50"
                                 >
-                                    {copied ? <Check className="size-[16px]" /> : <Copy className="size-[16px]" />}
+                                    {copied && <Check className="size-[14px]" />}
                                     {copied ? "คัดลอกแล้ว" : "คัดลอก"}
                                 </button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                {/* ── Step 1: Prompt Banner (แบนเนอร์ถามผู้ใช้งาน) ── */}
-                {outputText && !isTranslating && showPrompt && !showPanel && (
-                    <div
-                        className="mx-auto mt-[12px] w-full max-w-[700px] animate-slide-down"
-                    >
-                        <div className="flex items-center justify-between gap-[12px] rounded-[8px] bg-white px-[16px] py-[12px] shadow-lg ">
-                            <div className="flex items-center gap-[12px]">
-                                <Lightbulb />
-                                <div>
-                                    <p className="text-[16px] font-semibold text-app-green">
-                                        อยากแก้ไขคำศัพท์นี้เพื่อพัฒนาโมเดลหรือไม่?
-                                    </p>
-                                    <p className="text-xs text-app-green/80">
-                                        ร่วมแบ่งปันคำแปลที่ถูกต้องเพื่อพัฒนาโมเดลภาษาทางวิทยาการคอมพิวเตอร์
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-[12px] shrink-0">
                                 <button
-                                    onClick={() => {
-                                        if (!user) {
-                                            toast.error("กรุณาเข้าสู่ระบบก่อนส่ง feedback")
-                                            return
-                                        }
-                                        setShowPanel(true)
-                                        setShowPrompt(false)
-                                    }}
-                                    className="rounded-[8px] bg-app-green px-[20px] py-[8px] text-sm font-semibold text-white shadow-lg hover:opacity-90 active:scale-95"
+                                    onClick={handleDownload}
+                                    disabled={!outputText || isTranslating}
+                                    className="rounded-[8px] border border-white/40 px-[14px] py-[8px] text-[13px] font-medium text-white hover:bg-white/10 disabled:opacity-50"
                                 >
-                                    ใช่
-                                </button>
-                                <button
-                                    onClick={() => setShowPrompt(false)}
-                                    className="rounded-[8px] border border-zinc-200 bg-white px-[16px] py-[8px] text-sm font-medium text-zinc-600 hover:bg-zinc-50 active:scale-95"
-                                >
-                                    ไม่ใช่
+                                    ดาวน์โหลด .txt
                                 </button>
                             </div>
+                        </section>
+                    )}
+
+                    {/* ── แบนเนอร์เสนอคำแปล ── */}
+                    {outputText && !isTranslating && !showPanel && (
+                        <section className="animate-slide-down flex flex-col gap-[12px] rounded-[16px] border border-dashed border-zinc-400/70 bg-white px-[16px] py-[12px] sm:flex-row sm:items-center sm:justify-between">
+                            <p className="text-[13px] text-zinc-600">
+                                <span className="text-[14px] font-bold text-app-green">คำแปลไม่ถูกต้อง?</span>{" "}
+                                ส่ง Feed Back เพื่อช่วยพัฒนาโมเดลแปลภาษา
+                            </p>
+                            <button
+                                onClick={openSuggest}
+                                className="shrink-0 rounded-[8px] bg-app-green px-[18px] py-[8px] text-[14px] font-semibold text-white hover:opacity-90 active:scale-95"
+                            >
+                                เสนอคำแปล
+                            </button>
+                        </section>
+                    )}
+
+                    {/* ── ฟอร์มเสนอคำแปล ── */}
+                    {user && outputText && showPanel && (
+                        <div className="animate-slide-down">
+                            <SubmitWordPanel
+                                word={word}
+                                translation={translation}
+                                setTranslation={setTranslation}
+                                isSwap={isSwap}
+                                context={context}
+                                setContext={setContext}
+                                isSubmitting={isSubmitting}
+                                onSubmit={async () => {
+                                    await handleSubmit()
+                                    setShowPanel(false)
+                                }}
+                                onClose={() => setShowPanel(false)}
+                            />
                         </div>
-                    </div>
-                )}
+                    )}
 
-                {/* ── Step 2: Submit Word Panel (ฟอร์มแก้ไขคำศัพท์ต่อท้ายด้านล่างแบบเดิม) ── */}
-                {user && outputText && showPanel && (
-                    <div className="mx-auto mt-[48px] w-full max-w-[1080px] animate-slide-down">
-                        <SubmitWordPanel
-                            word={word}
-                            translation={translation}
-                            setTranslation={setTranslation}
-                            isSwap={isSwap}
-                            context={context}
-                            setContext={setContext}
-                            isSubmitting={isSubmitting}
-                            onSubmit={async () => {
-                                await handleSubmit()
-                                setShowPanel(false)
-                            }}
-                            onClose={() => setShowPanel(false)}
-                        />
+                    {/* ── ลิงก์ส่วนขยายแปลหน้าเว็บ ── */}
+                    <div className="flex justify-center pt-[16px]">
+                        <a
+                            href="https://github.com/AndriUs-Z/translate-extension#readme"
+                            target="_blank"
+                            rel="noopener"
+                            className="inline-flex items-center gap-[4px] text-[13px] font-medium text-app-green underline underline-offset-4 hover:opacity-80"
+                        >
+                            ติดตั้งส่วนขยายแปลหน้าเว็บ
+                            <ArrowUpRight className="size-[13px]" />
+                        </a>
                     </div>
-                )}
-
-                {/* ── ลิงก์ส่วนขยายแปลหน้าเว็บ ── */}
-                <div className="mt-[32px] flex justify-center">
-                    <a
-                        href="https://github.com/AndriUs-Z/translate-extension#readme"
-                        target="_blank"
-                        rel="noopener"
-                        className="inline-flex items-center gap-[6px] text-[14px] font-medium text-zinc-500 hover:text-app-green underline underline-offset-4 transition-colors"
-                    >
-                        ติดตั้งส่วนขยายแปลหน้าเว็บ
-                        <ExternalLink className="size-[14px]" />
-                    </a>
                 </div>
             </main>
         </>
